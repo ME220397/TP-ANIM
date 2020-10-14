@@ -12,6 +12,7 @@
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
+#include "puff.h"
 
 class GLArea : public QOpenGLWidget,
                protected QOpenGLFunctions
@@ -50,6 +51,8 @@ private:
     QOpenGLBuffer vbo_sol;
     QOpenGLBuffer vbo_particule;
     QOpenGLTexture *textures[2];
+
+    Puff *puff_test;
 
     void makeGLObjects();
     void tearGLObjects();

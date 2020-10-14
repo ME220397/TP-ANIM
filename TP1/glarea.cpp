@@ -68,6 +68,12 @@ void GLArea::initializeGL()
         qWarning() << program_particule->log();
     }
     program_particule->setUniformValue("texture", 0);
+
+    // Puff init
+    float remaining_time = 5.f; // Temps restant = 5 secondes
+    float size = 5.f; // taille = 5;
+    QVector3D position = QVector3D(10.f, 10.f, 3.f); // Position de départ : x = 10, y = 10, z = 3
+    puff_test = new Puff(QVector3D(10.f, 10.f, 3.f),5.f, QVector3D(1.f, 0.f,0.F), 5.f);
 }
 
 
@@ -218,10 +224,10 @@ void GLArea::paintGL()
     program_particule->setUniformValue("projectionMatrix", projectionMatrix);
     program_particule->setUniformValue("viewMatrix", viewMatrix);
 
-    Puff puff(QVector3D(10.f, 10.f, 3.f),5.f, QVector3D(1.f, 0.f,0.F), 10.f);
-    puff.set_particle(program_particule);
-    puff.set_texture(textures[1]);
-    puff.display();
+    puff_test->animate(dt);
+    puff_test->set_particle(program_particule);
+    puff_test->set_texture(textures[1]);
+    puff_test->display();
 
 }
 

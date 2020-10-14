@@ -17,11 +17,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         princ.cpp \
         glarea.cpp \
-        puff.cpp
+        puff.cpp \
+        smoke.cpp
 
 HEADERS  += princ.h \
         glarea.h \
-        puff.h
+        puff.h \
+        smoke.h
 
 FORMS    += princ.ui
 
