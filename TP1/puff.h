@@ -14,6 +14,9 @@ public:
     void display();
     void set_particle(QOpenGLShaderProgram *program_particle);
     void set_texture(QOpenGLTexture *texture);
+    float get_size();
+    float get_remaining_time();
+
 
 protected slots:
     void onTimeout();
@@ -24,8 +27,6 @@ private:
     float temps_restant;
     QOpenGLShaderProgram *program_particule;
     QOpenGLTexture *texture;
-    //QTimer *m_time = nullptr;
-
 };
 
 

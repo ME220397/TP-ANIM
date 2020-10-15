@@ -6,7 +6,7 @@
 #include <QSurfaceFormat>
 #include <QMatrix4x4>
 #include "puff.h"
-
+#include "smoke.h"
 
 
 GLArea::GLArea(QWidget *parent) :
@@ -69,11 +69,25 @@ void GLArea::initializeGL()
     }
     program_particule->setUniformValue("texture", 0);
 
+    program_particule2 = new QOpenGLShaderProgram(this);
+    program_particule2->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/billboard.vsh");
+    program_particule2->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/billboard.fsh");
+    if (! program_particule2->link()) {  // édition de lien des shaders dans le shader program
+        qWarning("Failed to compile and link shader program:");
+        qWarning() << program_particule2->log();
+    }
+    program_particule2->setUniformValue("texture", 0);
+
     // Puff init
     float remaining_time = 5.f; // Temps restant = 5 secondes
-    float size = 5.f; // taille = 5;
-    QVector3D position = QVector3D(10.f, 10.f, 3.f); // Position de départ : x = 10, y = 10, z = 3
-    puff_test = new Puff(QVector3D(10.f, 10.f, 3.f),5.f, QVector3D(1.f, 0.f,0.F), 5.f);
+    float size = 2.f; // taille = 5;
+    QVector3D position(10.f, 1.f, 3.f); // Position de départ : x = 10, y = 10, z = 3
+    QVector3D speed(0.f, 1.f,0.f); // vitesse, direction Z
+    Puff p(position,size, speed, remaining_time);
+    puff_test = new Puff(QVector3D(10.f, 1.f, 8.f),size+2, speed, remaining_time);
+    //Smoke init
+    smoke = new Smoke(QVector3D(10.f, 1.f, 3.f), 1.f);
+    smoke->addPuff(p);
 }
 
 
@@ -216,7 +230,7 @@ void GLArea::paintGL()
     program_sol->disableAttributeArray("in_uv");
     program_sol->release();
 
-
+    glDepthMask(GL_FALSE);
     // Affichage d'une particule
     vbo_particule.bind();
     program_particule->bind(); // active le shader program des particules
@@ -224,10 +238,20 @@ void GLArea::paintGL()
     program_particule->setUniformValue("projectionMatrix", projectionMatrix);
     program_particule->setUniformValue("viewMatrix", viewMatrix);
 
-    puff_test->animate(dt);
-    puff_test->set_particle(program_particule);
-    puff_test->set_texture(textures[1]);
-    puff_test->display();
+    program_particule2->bind(); // active le shader program des particules
+
+    program_particule2->setUniformValue("projectionMatrix", projectionMatrix);
+    program_particule2->setUniformValue("viewMatrix", viewMatrix);
+
+    smoke->set_particle(program_particule);
+    smoke->set_texture(textures[1]);
+    smoke->animate(dt);
+    smoke->display();
+
+    program_particule->release();
+    glDepthMask(GL_TRUE);
+    //smoke->animate(dt);
+    //smoke->display();
 
 }
 

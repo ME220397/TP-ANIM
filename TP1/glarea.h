@@ -13,6 +13,7 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 #include "puff.h"
+#include "smoke.h"
 
 class GLArea : public QOpenGLWidget,
                protected QOpenGLFunctions
@@ -48,11 +49,14 @@ private:
 
     QOpenGLShaderProgram *program_sol;
     QOpenGLShaderProgram *program_particule;
+    QOpenGLShaderProgram *program_particule2;
     QOpenGLBuffer vbo_sol;
     QOpenGLBuffer vbo_particule;
     QOpenGLTexture *textures[2];
 
     Puff *puff_test;
+    Puff *puff_test2;
+    Smoke *smoke;
 
     void makeGLObjects();
     void tearGLObjects();

@@ -2,14 +2,19 @@
 
 Puff::Puff(QVector3D position, float taille, QVector3D vecteur_vitesse, float temps_restant)
 {
-    //m_time = new QTimer(this);
-    //connect(m_time, SIGNAL(timeout()), this, SLOT(onTimeout()));
-    //m_time->setInterval(temps_restant*60);
-    //m_time->start();
+
     this->position = position;
     this->taille = taille;
     this->vecteur_vitesse = vecteur_vitesse;
     this->temps_restant = temps_restant;
+}
+
+float Puff::get_size(){
+    return taille;
+}
+
+float Puff::get_remaining_time(){
+    return temps_restant;
 }
 
 void Puff::animate(float dt){
@@ -29,9 +34,14 @@ void Puff::set_texture(QOpenGLTexture *texture){
 void Puff::display(){
     if(temps_restant > 0){
         QMatrix4x4 modelMatrixParticule;
+        QColor color = QColor(255,0,0, 255);
+
         modelMatrixParticule.translate(position);
         program_particule->setUniformValue("modelMatrix", modelMatrixParticule);
         program_particule->setUniformValue("particleSize", taille); //taille de départ.
+        program_particule->setUniformValue("color", color);
+
+        taille+=0.1;
 
         program_particule->setAttributeBuffer("in_position", GL_FLOAT, 0, 3, 5 * sizeof(GLfloat));
         program_particule->setAttributeBuffer("in_uv", GL_FLOAT, 3 * sizeof(GLfloat), 2, 5 * sizeof(GLfloat));
@@ -47,6 +57,6 @@ void Puff::display(){
 
         program_particule->disableAttributeArray("in_position");
         program_particule->disableAttributeArray("in_uv");
-        program_particule->release();
+
     }
 }

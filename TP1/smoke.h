@@ -13,12 +13,20 @@ public:
     Smoke(QVector3D position, float timeInterval);
     void addPuff(Puff puff);
     void animate(float dt);
+    void display();
+    void set_particle(QOpenGLShaderProgram *program_particle);
+    void set_texture(QOpenGLTexture *texture);
 
 private:
     QVector3D position;
     list<Puff> puffsList;
     float timeInterval;
     float elapsedTime;
+    Puff * get_last_puff();
+    void remove_disappeared_puffs();
+    void calc_new_position(float dt);
+    QOpenGLShaderProgram *program_particule;
+    QOpenGLTexture *texture;
 
 };
 
