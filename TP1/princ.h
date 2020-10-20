@@ -12,6 +12,11 @@ class Princ : public QMainWindow, private Ui::Princ
 
 public:
     explicit Princ(QWidget *parent = nullptr);
+private slots:
+    void on_TailleSlider_sliderMoved(int position);
+
+private:
+    int taille_slider_value;
 };
 
 #endif // PRINC_H
