@@ -16,6 +16,7 @@ public:
     void display();
     void set_particle(QOpenGLShaderProgram *program_particle);
     void set_texture(QOpenGLTexture *texture);
+    void translate_position(float x, float y, float z);
 
 private:
     QVector3D position;
@@ -27,7 +28,7 @@ private:
     void calc_new_position(float dt);
     QOpenGLShaderProgram *program_particule;
     QOpenGLTexture *texture;
-
+    int number_of_rows;
 };
 
 #endif // SMOKE_H

@@ -86,7 +86,7 @@ void GLArea::initializeGL()
     Puff p(position,size, speed, remaining_time);
     puff_test = new Puff(QVector3D(10.f, 1.f, 8.f),size+2, speed, remaining_time);
     //Smoke init
-    smoke = new Smoke(QVector3D(10.f, 1.f, 3.f), 1.f);
+    smoke = new Smoke(QVector3D(10.f, 1.f, 3.f), 1.F);
     smoke->addPuff(p);
 }
 
@@ -169,7 +169,7 @@ void GLArea::makeGLObjects()
         qDebug() << "load image ground.jpg failed";
     textures[0] = new QOpenGLTexture(image_sol);
 
-    QImage image_particule(":/textures/puff.png");
+    QImage image_particule(":/textures/puffs.png");
     if (image_particule.isNull())
         qDebug() << "load image puff.png failed";
     textures[1] = new QOpenGLTexture(image_particule);
@@ -238,11 +238,6 @@ void GLArea::paintGL()
     program_particule->setUniformValue("projectionMatrix", projectionMatrix);
     program_particule->setUniformValue("viewMatrix", viewMatrix);
 
-    program_particule2->bind(); // active le shader program des particules
-
-    program_particule2->setUniformValue("projectionMatrix", projectionMatrix);
-    program_particule2->setUniformValue("viewMatrix", viewMatrix);
-
     smoke->set_particle(program_particule);
     smoke->set_texture(textures[1]);
     smoke->animate(dt);
@@ -288,6 +283,22 @@ void GLArea::keyPressEvent(QKeyEvent *ev)
 
         case Qt::Key_D :
             zRot += da;
+            update();
+            break;
+        case Qt::Key_Up :
+            smoke->translate_position(0, 0, -1);
+            update();
+            break;
+        case Qt::Key_Down :
+            smoke->translate_position(0, 0, +1);
+            update();
+            break;
+        case Qt::Key_Left :
+            smoke->translate_position(-1, 0, 0);
+            update();
+            break;
+        case Qt::Key_Right :
+            smoke->translate_position(1, 0, 0);
             update();
             break;
     }

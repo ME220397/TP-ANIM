@@ -14,8 +14,11 @@ public:
     void display();
     void set_particle(QOpenGLShaderProgram *program_particle);
     void set_texture(QOpenGLTexture *texture);
+    void dec_alpha();
     float get_size();
     float get_remaining_time();
+    void set_number_of_rows(int n);
+    QVector2D get_offset();
 
 
 protected slots:
@@ -25,8 +28,14 @@ private:
     float taille;
     QVector3D vecteur_vitesse;
     float temps_restant;
+    float temps_max;
+    float vitesse_change_text;
     QOpenGLShaderProgram *program_particule;
     QOpenGLTexture *texture;
+    QVector4D color;
+    float alpha;
+    int texture_index;
+    int number_of_rows;
 };
 
 
