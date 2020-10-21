@@ -14,6 +14,10 @@ Puff::Puff(QVector3D position, float taille, QVector3D vecteur_vitesse, float te
     this->texture_index = 1;
 }
 
+void Puff::set_inc_vit_text(float v){
+    inc_v_text = v;
+}
+
 QVector2D Puff::get_offset(){
     // get x offset
     int column = texture_index % number_of_rows;
@@ -27,6 +31,12 @@ QVector2D Puff::get_offset(){
 
 void Puff::set_number_of_rows(int n){
     number_of_rows = n;
+}
+
+void Puff::set_color(QVector3D color){
+    this->color.setX(color.x());
+    this->color.setY(color.y());
+    this->color.setZ(color.z());
 }
 
 float Puff::get_size(){
@@ -66,7 +76,7 @@ void Puff::display(){
 
         modelMatrixParticule.translate(position);
 
-        vitesse_change_text += 0.4;
+        vitesse_change_text += inc_v_text;
         taille+=0.1;
         texture_index = (int) floor(vitesse_change_text + temps_max- temps_restant)%15;
         texture->bind();

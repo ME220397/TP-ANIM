@@ -26,6 +26,12 @@ public:
 
 protected slots:
     void onTimeout();
+    void size_changed(int size);
+    void vitesse_x_changed(int v);
+    void vitesse_y_changed(int v);
+    void vitesse_z_changed(int v);
+    void vitesse_change_texture(int v);
+    void color_puff_changed(QColor color);
 
 protected:
     void initializeGL() override;

@@ -7,11 +7,43 @@ Smoke::Smoke(QVector3D position, float timeInterval)
     this->timeInterval = timeInterval;
     this->elapsedTime = 0;
     this->puffsList = list<Puff>();
+    this->vit_puff_init = QVector3D(0, 3, 0);
+    this->initial_puff_size = 2;
     this->number_of_rows = 4;
+    this->inc_vit_texture = 0.4f;
+    this->color = QVector3D(1.f,1.F,1.f);
+}
+
+void Smoke::set_color(QColor color){
+    float x = (float)color.redF();
+    float y = (float)color.greenF();
+    float z = (float)color.blueF();
+
+    this->color.setX(x);
+    this->color.setY(y);
+    this->color.setZ(z);
+}
+
+void Smoke::set_puff_size(float size){
+    initial_puff_size = size;
+}
+
+void Smoke::set_vitesse_x(float v){
+    vit_puff_init.setX(v);
+}
+
+void Smoke::set_vitesse_y(float v){
+    vit_puff_init.setY(v);
+}
+
+void Smoke::set_vitesse_z(float v){
+    vit_puff_init.setZ(v);
 }
 
 void Smoke::addPuff(Puff puff){
     puff.set_number_of_rows(number_of_rows);
+    puff.set_inc_vit_text(inc_vit_texture);
+    puff.set_color(color);
     puffsList.push_back(puff);
 }
 
@@ -60,9 +92,9 @@ void Smoke::animate(float dt){
     if( elapsedTime > timeInterval){
         elapsedTime = 0;
         float remaining_time = (float) rand_life_time(5, 8);
-        float size = 2.f;
+        float size = initial_puff_size;
         QVector3D pos_init = position;
-        QVector3D vitesse = QVector3D(0, 1, 0);
+        QVector3D vitesse = vit_puff_init;
         Puff p(pos_init, size, vitesse, remaining_time);
         addPuff(p);
     }
@@ -80,6 +112,9 @@ void Smoke::set_texture(QOpenGLTexture *texture){
     this->texture = texture;
 }
 
+void Smoke::set_inc_vit_text(float v){
+    inc_vit_texture = v;
+}
 
 void Smoke::display(){
     list<Puff>::iterator i;

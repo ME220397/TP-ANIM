@@ -26,6 +26,7 @@ GLArea::GLArea(QWidget *parent) :
     connect (timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
     timer->start();
     elapsedTimer.start();
+
 }
 
 
@@ -345,7 +346,28 @@ void GLArea::mouseMoveEvent(QMouseEvent *ev)
     lastPos = ev->pos();
 }
 
+// SLOTS
+void GLArea::color_puff_changed(QColor color){
+    smoke->set_color(color);
+}
 
+void GLArea::size_changed(int size){
+    smoke->set_puff_size((float)size);
+}
+
+void GLArea::vitesse_x_changed(int v){
+    smoke->set_vitesse_x(v);
+}
+void GLArea::vitesse_y_changed(int v){
+    smoke->set_vitesse_y(v);
+}
+void GLArea::vitesse_z_changed(int v){
+    smoke->set_vitesse_z(v);
+}
+
+void GLArea::vitesse_change_texture(int v){
+    smoke->set_inc_vit_text((float)v/10.f);
+}
 void GLArea::onTimeout()
 {
     static qint64 old_chrono = elapsedTimer.elapsed(); // static : initialisation la première fois et conserve la dernière valeur

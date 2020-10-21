@@ -5,6 +5,7 @@
 #define PRINC_H
 
 #include "ui_princ.h"
+#include <QColorDialog>
 
 class Princ : public QMainWindow, private Ui::Princ
 {
@@ -12,11 +13,15 @@ class Princ : public QMainWindow, private Ui::Princ
 
 public:
     explicit Princ(QWidget *parent = nullptr);
+    int get_taille_slider();
+
 private slots:
-    void on_TailleSlider_sliderMoved(int position);
+    void on_pushButton_clicked();
 
 private:
-    int taille_slider_value;
+    int taille_slider;
+    bool dialVisible = false;
+    QColorDialog *dial;
 };
 
 #endif // PRINC_H
