@@ -10,6 +10,8 @@ Sujet : Animation de fumée par système de particules.
 Etat : Terminer.
 <br/>
 <br/>
+TP2 :
+<br/>
 Sujet : Animation comportementale (Boids);
 <br/>
 Etat : En cours.
