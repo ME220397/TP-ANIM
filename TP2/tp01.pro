@@ -15,11 +15,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
+        poisson.cpp \
         princ.cpp \
         glarea.cpp
 
 HEADERS  += princ.h \
-        glarea.h
+        glarea.h \
+        poisson.h
 
 FORMS    += princ.ui
 
