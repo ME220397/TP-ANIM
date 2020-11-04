@@ -12,8 +12,6 @@
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
-#include "puff.h"
-#include "smoke.h"
 
 class GLArea : public QOpenGLWidget,
                protected QOpenGLFunctions
@@ -26,13 +24,6 @@ public:
 
 protected slots:
     void onTimeout();
-    void size_changed(int size);
-    void vitesse_x_changed(int v);
-    void vitesse_y_changed(int v);
-    void vitesse_z_changed(int v);
-    void vitesse_change_texture(int v);
-    void color_puff_changed(QColor color);
-    void puff_life_changed(int l);
 
 protected:
     void initializeGL() override;
@@ -56,14 +47,9 @@ private:
 
     QOpenGLShaderProgram *program_sol;
     QOpenGLShaderProgram *program_particule;
-    QOpenGLShaderProgram *program_particule2;
     QOpenGLBuffer vbo_sol;
     QOpenGLBuffer vbo_particule;
     QOpenGLTexture *textures[2];
-
-    Puff *puff_test;
-    Puff *puff_test2;
-    Smoke *smoke;
 
     void makeGLObjects();
     void tearGLObjects();

@@ -4,6 +4,7 @@
 Smoke::Smoke(QVector3D position, float timeInterval)
 {
     this->position = position;
+    this->initial_puff_life = 5.f;
     this->timeInterval = timeInterval;
     this->elapsedTime = 0;
     this->puffsList = list<Puff>();
@@ -12,6 +13,10 @@ Smoke::Smoke(QVector3D position, float timeInterval)
     this->number_of_rows = 4;
     this->inc_vit_texture = 0.4f;
     this->color = QVector3D(1.f,1.F,1.f);
+}
+
+void Smoke::set_puff_life(float l){
+    initial_puff_life = l;
 }
 
 void Smoke::set_color(QColor color){
@@ -91,7 +96,7 @@ void Smoke::animate(float dt){
     elapsedTime += dt;
     if( elapsedTime > timeInterval){
         elapsedTime = 0;
-        float remaining_time = (float) rand_life_time(5, 8);
+        float remaining_time = (float) rand_life_time(initial_puff_life, initial_puff_life + 3);
         float size = initial_puff_size;
         QVector3D pos_init = position;
         QVector3D vitesse = vit_puff_init;

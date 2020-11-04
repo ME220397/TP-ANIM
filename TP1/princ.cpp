@@ -15,6 +15,7 @@ Princ::Princ(QWidget *parent) : QMainWindow(parent)
     connect(VitesseZ, SIGNAL(valueChanged(int)), glarea, SLOT(vitesse_z_changed(int)));
     connect(VitText, SIGNAL(sliderMoved(int)), glarea, SLOT(vitesse_change_texture(int)));
     connect(dial, SIGNAL(currentColorChanged(QColor)), glarea, SLOT(color_puff_changed(QColor)));
+    connect(life, SIGNAL(valueChanged(int)), glarea, SLOT(puff_life_changed(int)));
 }
 
 int Princ::get_taille_slider(){
