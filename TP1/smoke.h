@@ -23,6 +23,7 @@ public:
     void set_vitesse_z(float v);
     void set_inc_vit_text(float v);
     void set_color(QColor color);
+    void set_puff_life(float l);
 
 private:
     QVector3D position;
@@ -39,6 +40,7 @@ private:
     QVector3D color;
     int number_of_rows;
     float inc_vit_texture;
+    float initial_puff_life;
 };
 
 #endif // SMOKE_H

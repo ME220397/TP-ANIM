@@ -368,6 +368,10 @@ void GLArea::vitesse_z_changed(int v){
 void GLArea::vitesse_change_texture(int v){
     smoke->set_inc_vit_text((float)v/10.f);
 }
+
+void GLArea::puff_life_changed(int l){
+    smoke->set_puff_life((float)l);
+}
 void GLArea::onTimeout()
 {
     static qint64 old_chrono = elapsedTimer.elapsed(); // static : initialisation la première fois et conserve la dernière valeur

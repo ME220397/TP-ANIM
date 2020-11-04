@@ -32,6 +32,7 @@ protected slots:
     void vitesse_z_changed(int v);
     void vitesse_change_texture(int v);
     void color_puff_changed(QColor color);
+    void puff_life_changed(int l);
 
 protected:
     void initializeGL() override;
