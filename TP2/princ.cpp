@@ -7,4 +7,5 @@
 Princ::Princ(QWidget *parent) : QMainWindow(parent)
 {
     setupUi(this);
+    connect(size_slider, SIGNAL(valueChanged(int)), glarea,  SLOT(on_axis_size_changed(int)));
 }

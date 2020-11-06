@@ -12,6 +12,8 @@
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
+#include <axe.h>
+#include <poisson.h>
 
 class GLArea : public QOpenGLWidget,
                protected QOpenGLFunctions
@@ -36,6 +38,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent *ev) override;
     void mouseMoveEvent(QMouseEvent *ev) override;
 
+private slots:
+    void on_axis_size_changed(int v);
 private:
     float xRot=20.0f, yRot=0.0f, zRot=0.0f;
     float xPos=0.0f,  yPos=0.0f, zPos=-50.0f;
@@ -50,6 +54,15 @@ private:
     QOpenGLBuffer vbo_sol;
     QOpenGLBuffer vbo_particule;
     QOpenGLTexture *textures[2];
+
+    //Shader du poisson
+    QOpenGLShaderProgram *program_poisson;
+    QOpenGLBuffer vbo_poisson;
+
+    // Creation des axes du repère
+    Axe * axe;
+    // Creaton du poisson
+    Poisson * poisson;
 
     void makeGLObjects();
     void tearGLObjects();

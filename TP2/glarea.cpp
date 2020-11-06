@@ -5,8 +5,32 @@
 #include <QDebug>
 #include <QSurfaceFormat>
 #include <QMatrix4x4>
+#include <QDir>
+#include <QStandardPaths>
+#include <QCoreApplication>
 
 
+// shader appliqué à chaque vertex
+static const char *vertexShaderSource =
+    "attribute vec4 in_position;               \n"
+    "attribute lowp vec4 in_color;               \n"
+    "varying lowp vec4 color;               \n"
+    "uniform mat4 projectionMatrix;         \n"
+    "uniform mat4 viewMatrix;               \n"
+    "uniform mat4 modelMatrix;              \n"
+    "uniform float particleSize;            \n"
+    "void main() {                          \n"
+    "   color = in_color;                        \n"
+    "   vec4 pos = vec4(vec3(in_position) * particleSize, 1.0);                   \n"
+    "   gl_Position = projectionMatrix * viewMatrix * modelMatrix * pos;          \n"
+    "}                                      \n";
+
+// shader appliqué à un fragment = un morceau rasterisé d'une primitive graphique
+static const char *fragmentShaderSource =
+    "varying lowp vec4 color;               \n"
+    "void main() {                          \n"
+    "   gl_FragColor = color;               \n"
+    "}                                      \n";
 
 GLArea::GLArea(QWidget *parent) :
     QOpenGLWidget(parent)
@@ -25,6 +49,10 @@ GLArea::GLArea(QWidget *parent) :
     connect (timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
     timer->start();
     elapsedTimer.start();
+
+    axe = new Axe(this);
+
+    poisson = new Poisson(QVector3D(0.0f, 0.0f, 0.0F), 2.f, QVector3D(1.0f, 0.0f, 0.0F));
 }
 
 
@@ -67,6 +95,19 @@ void GLArea::initializeGL()
         qWarning() << program_particule->log();
     }
     program_particule->setUniformValue("texture", 0);
+
+    //Shader du tetrahadre
+    program_poisson = new QOpenGLShaderProgram(this);
+    program_poisson->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
+    program_poisson->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
+    if(!program_poisson->link()){
+        qWarning("Failed to compile and link shader program");
+        qWarning() << program_poisson->log();
+    }
+
+    // Shader des axes x, y et z
+    axe->init_axis();
+
 }
 
 
@@ -141,6 +182,71 @@ void GLArea::makeGLObjects()
     vbo_particule.bind();
     vbo_particule.allocate(vertData_particule.constData(), vertData_particule.count() * int(sizeof(GLfloat)));
 
+    // Creation d'un tetrahede
+    GLfloat vertices_poisson[] = {
+        //triangle 1
+        0.0, 0.5, 0.0,   // A
+        -0.5, -0.5, 0.0, // B
+        0.5, -0.5, 0.0,  // C
+
+        //triangle 2
+        0.0, -0.16, 1.5,   // D
+        0.0, 0.5, 0.0,   // A
+        0.5, -0.5,  0.0, // C
+
+        //triangle 3
+        -0.5, -0.5, 0.0, // B
+        0.0, 0.5, 0.0,   // A
+        0.0, -0.16, 1.5,   // D
+
+        //triangle 4
+        0.5, -0.5,  0.0, // C
+        -0.5, -0.5, 0.0, // B
+        0.0, -0.16, 1.5,   // D
+
+
+    };
+
+    GLfloat color_poisson[] = {
+
+        // Sommets du triangle 1
+        0.3, 0.3, 0.3,
+        0.3, 0.3, 0.3,
+        0.3, 0.3, 0.3,
+
+        // Sommets du triangle 2
+        0.3, 0.3, 0.3,
+        0.3, 0.3, 0.3,
+        0.3, 0.3, 0.3,
+
+        // Sommets du triangle 3
+        0.3, 0.3, 0.3,
+        0.3, 0.3, 0.3,
+        0.3, 0.3, 0.3,
+
+        // Sommets du triangle 3
+        0.3, 0.3, 0.3,
+        0.3, 0.3, 0.3,
+        0.3, 0.3, 0.3
+    };
+
+    QVector<GLfloat> vertData_poisson;
+    for(int i=0 ; i < 9; i++){
+        // Sommets du poisson
+        for(int j=0; j<3; j++){
+            vertData_poisson.append(vertices_poisson[i*3+j]);
+        }
+        // Couleur
+        for(int j=0; j<3; j++){
+            vertData_poisson.append(color_poisson[i*3+j]);
+        }
+    }
+    vbo_poisson.create();
+    vbo_poisson.bind();
+    vbo_poisson.allocate(vertData_poisson.constData(), vertData_poisson.count() * int(sizeof (GLfloat)));
+
+    // Creation des axes
+    axe->make_axis_object();
 
     // Création de textures
     QImage image_sol(":/textures/ground.jpg");
@@ -159,6 +265,8 @@ void GLArea::tearGLObjects()
 {
     vbo_sol.destroy();
     vbo_particule.destroy();
+    vbo_poisson.destroy();
+    axe->destroy_vbo();
     for (int i = 0; i < 2; i++)
         delete textures[i];
 }
@@ -186,29 +294,18 @@ void GLArea::paintGL()
     viewMatrix.rotate(yRot, 0, 1, 0);
     viewMatrix.rotate(zRot, 0, 0, 1);
 
-    // Affichage du sol
-    vbo_sol.bind();
-    program_sol->bind(); // active le shader program du sol
+    //Affichage du program poisson test
+    axe->draw_axis(projectionMatrix, viewMatrix);
 
-    QMatrix4x4 modelMatrixSol;
-    modelMatrixSol.translate(0.0f, 0.0f, 0.0f);
-    program_sol->setUniformValue("projectionMatrix", projectionMatrix);
-    program_sol->setUniformValue("viewMatrix", viewMatrix);
-    program_sol->setUniformValue("modelMatrix", modelMatrixSol);
+    //Affichage des poissons
+    vbo_poisson.bind();
+    program_poisson->bind();
+    poisson->set_program(program_poisson);
+    poisson->affiche(projectionMatrix, viewMatrix);
 
-    program_sol->setAttributeBuffer("in_position", GL_FLOAT, 0, 3, 5 * sizeof(GLfloat));
-    program_sol->setAttributeBuffer("in_uv", GL_FLOAT, 3 * sizeof(GLfloat), 2, 5 * sizeof(GLfloat));
-    program_sol->enableAttributeArray("in_position");
-    program_sol->enableAttributeArray("in_uv");
 
-    textures[0]->bind();
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    textures[0]->release();
-
-    program_sol->disableAttributeArray("in_position");
-    program_sol->disableAttributeArray("in_uv");
-    program_sol->release();
 }
+
 
 
 void GLArea::keyPressEvent(QKeyEvent *ev)
@@ -300,4 +397,8 @@ void GLArea::onTimeout()
 
 
     update();
+}
+
+void GLArea::on_axis_size_changed(int v){
+    axe->set_size((float) v);
 }
