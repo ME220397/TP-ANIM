@@ -1,9 +1,10 @@
 #include "poisson.h"
-
+#include <QtMath>
 Poisson::Poisson(QVector3D position, float taille, QVector3D vitesse){
     this->position = position;
     this->taille = taille;
     this->vitesse = vitesse;
+    this->angle = 0;
 }
 
 // Getters and Setters
@@ -42,6 +43,7 @@ void Poisson::anime(float dt){
 void Poisson::affiche(QMatrix4x4 projectionMatrix, QMatrix4x4 viewMatrix){
     program_poisson->bind();
     QMatrix4x4 modelMatrixPoisson;
+
     modelMatrixPoisson.translate(position);
 
     program_poisson->setUniformValue("projectionMatrix", projectionMatrix);

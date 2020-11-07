@@ -32,6 +32,7 @@ private:
     QVector3D vitesse;
     float dist_perimeter;
     QOpenGLShaderProgram * program_poisson;
+    int angle;
 };
 
 #endif // POISSON_H

@@ -51,8 +51,8 @@ GLArea::GLArea(QWidget *parent) :
     elapsedTimer.start();
 
     axe = new Axe(this);
-
-    poisson = new Poisson(QVector3D(0.0f, 0.0f, 0.0F), 2.f, QVector3D(1.0f, 0.0f, 0.0F));
+    aquarium = new Aquarium(this);
+    poisson = new Poisson(QVector3D(0.0f, 0.0f, 0.0F), 1.f, QVector3D(0.0f, 0.0f, 1.0F));
 }
 
 
@@ -107,6 +107,8 @@ void GLArea::initializeGL()
 
     // Shader des axes x, y et z
     axe->init_axis();
+    // shader de l'aquarium
+    aquarium->init_axis();
 
 }
 
@@ -248,6 +250,9 @@ void GLArea::makeGLObjects()
     // Creation des axes
     axe->make_axis_object();
 
+    //Creation de l'aquarium
+    aquarium->make_axis_object();
+
     // Création de textures
     QImage image_sol(":/textures/ground.jpg");
     if (image_sol.isNull())
@@ -267,6 +272,7 @@ void GLArea::tearGLObjects()
     vbo_particule.destroy();
     vbo_poisson.destroy();
     axe->destroy_vbo();
+    aquarium->destroy_vbo();
     for (int i = 0; i < 2; i++)
         delete textures[i];
 }
@@ -297,10 +303,14 @@ void GLArea::paintGL()
     //Affichage du program poisson test
     axe->draw_axis(projectionMatrix, viewMatrix);
 
+    //Creation de l'aquarium
+    aquarium->draw_axis(projectionMatrix, viewMatrix);
+
     //Affichage des poissons
     vbo_poisson.bind();
     program_poisson->bind();
     poisson->set_program(program_poisson);
+    poisson->anime(dt);
     poisson->affiche(projectionMatrix, viewMatrix);
 
 
@@ -401,4 +411,38 @@ void GLArea::onTimeout()
 
 void GLArea::on_axis_size_changed(int v){
     axe->set_size((float) v);
+}
+
+void GLArea::on_x_pos_changed(int v){
+    QVector3D speed = poisson->get_speed();
+    poisson->set_speed(QVector3D(v, speed[1], speed[2]));
+}
+
+void GLArea::on_y_pos_changed(int v){
+    QVector3D speed = poisson->get_speed();
+    poisson->set_speed(QVector3D(speed[0], v, speed[2]));
+}
+
+void GLArea::on_z_pos_changed(int v){
+    QVector3D speed = poisson->get_speed();
+    poisson->set_speed(QVector3D(speed[0], speed[1], v));
+}
+
+void GLArea::on_taille_changed(int v){
+    poisson->set_size(v);
+}
+
+void GLArea::on_width_changed(int v){
+    qDebug() << "width " << v;
+    aquarium->set_width(v);
+}
+
+void GLArea::on_depth_changed(int v){
+    qDebug() << "depth " << v;
+    aquarium->set_depth(v);
+}
+
+void GLArea::on_height_changed(int v){
+    qDebug() << "heigth " << v;
+    aquarium->set_height(v);
 }

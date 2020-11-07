@@ -14,6 +14,7 @@
 #include <QOpenGLTexture>
 #include <axe.h>
 #include <poisson.h>
+#include <aquarium.h>
 
 class GLArea : public QOpenGLWidget,
                protected QOpenGLFunctions
@@ -40,6 +41,13 @@ protected:
 
 private slots:
     void on_axis_size_changed(int v);
+    void on_x_pos_changed(int v);
+    void on_y_pos_changed(int v);
+    void on_z_pos_changed(int v);
+    void on_taille_changed(int v);
+    void on_width_changed(int v);
+    void on_depth_changed(int v);
+    void on_height_changed(int v);
 private:
     float xRot=20.0f, yRot=0.0f, zRot=0.0f;
     float xPos=0.0f,  yPos=0.0f, zPos=-50.0f;
@@ -61,6 +69,8 @@ private:
 
     // Creation des axes du repère
     Axe * axe;
+    //Creation d'un aquarium
+    Aquarium * aquarium;
     // Creaton du poisson
     Poisson * poisson;
 
