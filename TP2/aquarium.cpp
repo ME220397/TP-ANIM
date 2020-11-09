@@ -25,10 +25,23 @@ static const char *fragmentShaderSource =
 Aquarium::Aquarium(QOpenGLWidget * parent)
 {
     m_program = new QOpenGLShaderProgram(parent);
-    width = 24.f;
-    height = 14.f;
-    depth = 23.f;
+    width = 9.f;
+    height = 6.f;
+    depth = 7.f;
 }
+
+int Aquarium::get_width(){
+    return width;
+}
+
+int Aquarium::get_height(){
+    return height;
+}
+
+int Aquarium::get_depth(){
+    return depth;
+}
+
 
 void Aquarium::set_width(float w){
     width = w;

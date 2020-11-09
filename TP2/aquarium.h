@@ -11,6 +11,10 @@ class Aquarium
 {
 public:
     Aquarium(QOpenGLWidget * parent);
+    int get_width();
+    int get_height();
+    int get_depth();
+
     void set_width(float w);
     void set_height(float h);
     void set_depth(float d);

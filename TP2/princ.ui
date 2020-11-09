@@ -53,7 +53,7 @@
              <number>30</number>
             </property>
             <property name="value">
-             <number>24</number>
+             <number>9</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -79,7 +79,7 @@
              <number>30</number>
             </property>
             <property name="value">
-             <number>14</number>
+             <number>6</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -105,7 +105,7 @@
              <number>30</number>
             </property>
             <property name="value">
-             <number>23</number>
+             <number>7</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -190,17 +190,20 @@
             <item>
              <widget class="QLabel" name="label_3">
               <property name="text">
-               <string>x</string>
+               <string>v1 coeff</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QSpinBox" name="xBox">
+              <property name="minimum">
+               <number>-30</number>
+              </property>
               <property name="maximum">
                <number>30</number>
               </property>
               <property name="value">
-               <number>0</number>
+               <number>1</number>
               </property>
              </widget>
             </item>
@@ -214,14 +217,20 @@
             <item>
              <widget class="QLabel" name="label_4">
               <property name="text">
-               <string>Y</string>
+               <string>v2 coeff</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QSpinBox" name="yBox">
+              <property name="minimum">
+               <number>-30</number>
+              </property>
               <property name="maximum">
                <number>30</number>
+              </property>
+              <property name="value">
+               <number>1</number>
               </property>
              </widget>
             </item>
@@ -235,12 +244,15 @@
             <item>
              <widget class="QLabel" name="label_5">
               <property name="text">
-               <string>z</string>
+               <string>v3 coeff</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QSpinBox" name="zBox">
+              <property name="minimum">
+               <number>-30</number>
+              </property>
               <property name="maximum">
                <number>30</number>
               </property>
@@ -289,6 +301,57 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="Start">
+            <property name="text">
+             <string>Start</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_11">
+            <property name="text">
+             <string>banc</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_12">
+              <property name="text">
+               <string>nb poissons</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="nbPoissons">
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="value">
+               <number>24</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>

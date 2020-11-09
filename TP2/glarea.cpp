@@ -53,6 +53,8 @@ GLArea::GLArea(QWidget *parent) :
     axe = new Axe(this);
     aquarium = new Aquarium(this);
     poisson = new Poisson(QVector3D(0.0f, 0.0f, 0.0F), 1.f, QVector3D(0.0f, 0.0f, 1.0F));
+    banc = new Banc(24, aquarium->get_height(), aquarium->get_width(), aquarium->get_depth());
+
 }
 
 
@@ -309,10 +311,16 @@ void GLArea::paintGL()
     //Affichage des poissons
     vbo_poisson.bind();
     program_poisson->bind();
-    poisson->set_program(program_poisson);
+    /*poisson->set_program(program_poisson);
     poisson->anime(dt);
-    poisson->affiche(projectionMatrix, viewMatrix);
+    poisson->affiche(projectionMatrix, viewMatrix);*/
 
+    // Affichage de banc
+    banc->set_projection_matrix(projectionMatrix);
+    banc->set_view_matrix(viewMatrix);
+    banc->set_program(program_poisson);
+    banc->animate(dt);
+    banc->affiche();
 
 }
 
@@ -413,19 +421,16 @@ void GLArea::on_axis_size_changed(int v){
     axe->set_size((float) v);
 }
 
-void GLArea::on_x_pos_changed(int v){
-    QVector3D speed = poisson->get_speed();
-    poisson->set_speed(QVector3D(v, speed[1], speed[2]));
+void GLArea::on_v1_coeff_changed(int v){
+    banc->set_v1_coeff(v);
 }
 
-void GLArea::on_y_pos_changed(int v){
-    QVector3D speed = poisson->get_speed();
-    poisson->set_speed(QVector3D(speed[0], v, speed[2]));
+void GLArea::on_v2_coeff_changed(int v){
+    banc->set_v2_coeff(v);
 }
 
-void GLArea::on_z_pos_changed(int v){
-    QVector3D speed = poisson->get_speed();
-    poisson->set_speed(QVector3D(speed[0], speed[1], v));
+void GLArea::on_v3_coeff_changed(int v){
+    banc->set_v3_coeff(v);
 }
 
 void GLArea::on_taille_changed(int v){
@@ -433,16 +438,34 @@ void GLArea::on_taille_changed(int v){
 }
 
 void GLArea::on_width_changed(int v){
-    qDebug() << "width " << v;
     aquarium->set_width(v);
+    banc->set_width_box(v);
 }
 
 void GLArea::on_depth_changed(int v){
-    qDebug() << "depth " << v;
     aquarium->set_depth(v);
+    banc->set_depth_box(v);
 }
 
 void GLArea::on_height_changed(int v){
-    qDebug() << "heigth " << v;
     aquarium->set_height(v);
+    banc->set_height_box(v);
+}
+
+void GLArea::on_nb_poissons_changed(int v){
+    int n = banc->get_size();
+    if(n>v) {
+        for(int i=0; i< n-v; i++){
+            banc->remove_last();
+        }
+    }
+    if(v>n){
+        for(int i=0; i< v-n; i++){
+            banc->add_poisson();
+        }
+    }
+}
+
+void GLArea::on_click_start(){
+    banc->on_start();
 }
