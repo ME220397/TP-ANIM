@@ -14,6 +14,15 @@ TP2 :
 <br/>
 Sujet : Animation comportementale (Boids);
 <br/>
+Etat : Terminé.
+<br/>
+Ps: Ameliorations possible. 
+<br/>
+<br/>
+TP3 :
+<br/>
+Sujet : Animation physique avec la bibliothèque Bullet Physics;
+<br/>
 Etat : En cours.
 <br/>
-<br/>
+
