@@ -4,6 +4,7 @@
 #include <QTimer>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
+#include <math.h>
 
 class Puff
 {
